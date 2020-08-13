@@ -1,18 +1,27 @@
 import requests
 import json
+from django.db.models import Count
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.utils import json
+from .models import APIKey
+from random import randint
 from .serializer import AddressSerializer
 from .serializer import ListAddressSubjectionSerializer
 from .serializer import GeoSerializer
 from .serializer import LocationIdSerializer
 
 
-# Initial apikey
-apikey = 'UcCz-MuEiM826LM0zsEcO4usJ8-w-rYNhRYpn-j6O08';
+def random_key():
+    self = APIKey.objects
+    count = self.aggregate(count=Count('id'))['count']
+    random_index = randint(0, count - 1)
 
+    return self.all()[random_index]
+
+
+apikey = random_key()
 
 
 @api_view(['POST', ])
@@ -160,8 +169,6 @@ def convert_geo_to_address(request):
 
         api_url = url + location + query + limit + language + key
 
-        print(api_url)
-
         res = requests.get(api_url)
         data = res.json()
 
@@ -209,8 +216,6 @@ def convert_geo_to_location_id(request):
 
         api_url = url + key + location
 
-        print(api_url)
-
         res = requests.get(api_url)
         data = res.json()
 
@@ -234,6 +239,5 @@ def convert_geo_to_location_id(request):
             'status_code': 405,
             'success': False,
         }, status = status.HTTP_405_METHOD_NOT_ALLOWED, )
-
 
 
