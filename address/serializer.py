@@ -16,8 +16,7 @@ class AddressSerializer(serializers.Serializer):
 class GeoSerializer(serializers.Serializer):
     lat = serializers.FloatField()
     lng = serializers.FloatField()
-    # lat = serializers.CharField(max_length = 40)
-    # lng = serializers.CharField(max_length = 40)
+
 
 class LocationIdSerializer(serializers.Serializer):
     location_id = serializers.CharField(max_length = 100)
